@@ -1,0 +1,62 @@
+﻿@model PatientViewModel
+@{
+    ViewData["Title"] = "Add Patient";
+}
+
+<h3>Add Patient</h3>
+<a asp-action="index" class="btn btn-primary mt-3 mb-3">Back To List</a>
+
+<form id="patientForm" asp-action="SaveAdd" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="DateOfBirth"></label>
+        <input asp-for="DateOfBirth" class="form-control" type="date" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Gender"></label>
+        <select asp-for="Gender" class="form-control">
+            <option value="">-- Select Gender --</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="PhoneNumber"></label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Save</button>
+</form>
+
+<div class="mt-4" id="resultMsg"></div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $("#patientForm").submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr("action"),
+                method: "POST",
+                data: $(this).serialize(),
+                success: function () {
+                    $("#resultMsg").html('<div class="alert alert-success">Saved successfully!</div>');
+                    $("#patientForm")[0].reset();
+                },
+                error: function () {
+                    $("#resultMsg").html('<div class="alert alert-danger">Error saving patient.</div>');
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,41 @@
+﻿@model EditAppointmentViewModel
+@{
+    ViewData["Title"] = "Edit Appointment";
+
+    SelectList PatientOptions = new SelectList(Model.Patients, "Id", "Name");
+}
+
+<h3>Edit Appointment</h3>
+<a asp-action="index" class="btn btn-primary mt-3 mb-3">Back To List</a>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="SaveEdit" asp-route-id="@Model.Id" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="PatientId"></label>
+                <select asp-for="PatientId" asp-items="PatientOptions" class="form-control">
+                    <option value="">-- Select Patient --</option>
+                </select>
+                <span asp-validation-for="PatientId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="AppointmentDate" class="control-label"></label>
+                <input asp-for="AppointmentDate" class="form-control" />
+                <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Reason" class="control-label"></label>
+                <input asp-for="Reason" class="form-control" />
+                <span asp-validation-for="Reason" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary w-100" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

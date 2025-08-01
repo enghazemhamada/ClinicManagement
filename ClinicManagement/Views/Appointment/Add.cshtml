@@ -1,0 +1,56 @@
+﻿@model AppointmentWithPatientsViewModel
+@{
+    ViewData["Title"] = "Add Appointment";
+
+    SelectList PatientOptions = new SelectList(Model.Patients, "Id", "Name");
+}
+
+<h3>Add Appointment</h3>
+<a asp-action="index" class="btn btn-primary mt-3 mb-3">Back To List</a>
+
+<form id="appointmentForm" asp-action="SaveAdd" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="PatientId"></label>
+        <select asp-for="PatientId" asp-items="PatientOptions" class="form-control">
+            <option value="">-- Select Patient --</option>
+        </select>
+        <span asp-validation-for="PatientId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="AppointmentDate"></label>
+        <input asp-for="AppointmentDate" class="form-control" type="date" />
+        <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Reason"></label>
+        <textarea asp-for="Reason" class="form-control"></textarea>
+        <span asp-validation-for="Reason" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Save</button>
+</form>
+
+<div id="resultMsg" class="mt-3"></div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $("#appointmentForm").submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr("action"),
+                method: "POST",
+                data: $(this).serialize(),
+                success: function () {
+                    $("#resultMsg").html('<div class="alert alert-success">Appointment saved successfully!</div>');
+                    $("#appointmentForm")[0].reset();
+                },
+                error: function () {
+                    $("#resultMsg").html('<div class="alert alert-danger">Error occurred.</div>');
+                }
+            });
+        });
+    </script>
+}
