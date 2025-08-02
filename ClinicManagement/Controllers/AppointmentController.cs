@@ -101,5 +101,28 @@ namespace ClinicManagement.Controllers
             appointmentVM.Patients = await _patientRepository.GetAllAsync();
             return View("Edit", appointmentVM);
         }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            Appointment appointmentFromDB = await _appointmentRepository.GetAppointmentWithPatientAsync(id);
+            if(appointmentFromDB != null)
+            {
+                return View("Delete", appointmentFromDB);
+            }
+            return NotFound();
+        }
+
+        public async Task<IActionResult> ConfirmDelete(int id)
+        {
+            Appointment appointmentFromDB = await _appointmentRepository.GetByIdAsync(id);
+            if(appointmentFromDB != null)
+            {
+                _appointmentRepository.Delete(appointmentFromDB);
+                await _appointmentRepository.SaveAsync();
+
+                return RedirectToAction("Index");
+            }
+            return NotFound();
+        }
     }
 }
