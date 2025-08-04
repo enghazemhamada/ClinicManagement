@@ -11,7 +11,8 @@ namespace ClinicManagement.Models
 		public int PatientId { get; set; }
 
 		[DataType(DataType.Date)]
-		public DateTime AppointmentDate { get; set; }
+        [Display(Name = "Appointment Date")]
+        public DateTime AppointmentDate { get; set; }
 
 		[StringLength(255)]
 		public string Reason { get; set; }

@@ -2,6 +2,7 @@
 using ClinicManagement.Repositories;
 using ClinicManagement.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClinicManagement.Controllers
 {
@@ -14,6 +15,36 @@ namespace ClinicManagement.Controllers
         {
             _appointmentRepository = appointmentRepository;
             _patientRepository = patientRepository;
+        }
+
+        public IActionResult Index()
+        {
+            return View("Index");
+        }
+
+        public async Task<IActionResult> GetAppointments(string search, bool upcomingOnly = false)
+        {
+            var query = _appointmentRepository.GetAppointmentsWithPatients();
+
+            if(!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(a => a.Patient.Name.Contains(search));
+            }
+
+            if(upcomingOnly)
+            {
+                query = query.Where(a => a.AppointmentDate >= DateTime.Today);
+            }
+
+            var appointmentList = await query.Select(a => new
+            {
+                a.Id,
+                PatientName = a.Patient.Name,
+                AppointmentDate = a.AppointmentDate.ToString("yyyy-MM-dd"),
+                TotalAppointments = query.Count(ap => ap.PatientId == a.PatientId)
+            }).ToListAsync();
+
+            return Json(appointmentList);
         }
 
         public async Task<IActionResult> Add()

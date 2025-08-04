@@ -17,5 +17,10 @@ namespace ClinicManagement.Repositories
         {
             return await _context.Appointments.Include(a => a.Patient).FirstOrDefaultAsync(a => a.Id == id);
         }
+
+        public IQueryable<Appointment> GetAppointmentsWithPatients()
+        {
+            return _context.Appointments.Include(a => a.Patient).AsQueryable();
+        }
     }
 }
